@@ -23,10 +23,9 @@ public class MembershipController
         private MembershipService service;
 
         // GET
-        @GetMapping
+        @GetMapping("/id")
         public ResponseEntity<Membership> GetMembershipById(@RequestParam int id)
         {
-                LOG.info("Getting membership by id: " + id);
                 var mem = service.GetMembershipById(id);
                 if (mem.isEmpty())
                         return ResponseEntity.notFound().build();
@@ -34,8 +33,19 @@ public class MembershipController
                         return ResponseEntity.ok().body(mem.get());
         }
 
+        @GetMapping("/phoneNumber")
+        public ResponseEntity<Membership> GetMembershipByUserPhoneNumber(@RequestParam String phoneNumber)
+        {
+                var mem = service.GetMembershipByUserPhoneNumber(phoneNumber);
+                if (mem.isEmpty())
+                        return ResponseEntity.notFound().build();
+                else
+                        return ResponseEntity.ok().body(mem.get());
+        }
+
+
         // POST
-        @PostMapping
+        @PostMapping("/create")
         public ResponseEntity<Membership> CreateMembership(@RequestBody Membership membership)
         {
                 var mem = service.CreateMembership(membership.getUser().getId(), membership);

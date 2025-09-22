@@ -18,6 +18,9 @@ public class User
         @Column(name="birthday")
         private LocalDateTime birthday;
 
+        @Column(name="phone_number")
+        private String phoneNumber;
+
         public Integer getId()
         {
                 return id;
@@ -41,5 +44,15 @@ public class User
         public void setBirthday(LocalDateTime birthday)
         {
                 this.birthday = birthday;
+        }
+
+        public String getPhoneNumber()
+        {
+                return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber)
+        {
+                this.phoneNumber = phoneNumber;
         }
 }

@@ -12,8 +12,9 @@ public class Membership
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
-        @Column(name="type")
-        private String type;
+        @ManyToOne
+        @JoinColumn(name="type")
+        private MembershipTypes type;
 
         @Column(name="last_payed")
         private LocalDateTime lastPayed;
@@ -30,12 +31,12 @@ public class Membership
                 return id;
         }
 
-        public String getType()
+        public MembershipTypes getType()
         {
                 return type;
         }
 
-        public void setType(String type)
+        public void setType(MembershipTypes type)
         {
                 this.type = type;
         }

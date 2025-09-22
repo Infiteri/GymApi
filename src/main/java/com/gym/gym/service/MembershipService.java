@@ -7,9 +7,11 @@ import com.gym.gym.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.logging.Logger;
 
 @Service
@@ -27,6 +29,16 @@ public class MembershipService
         {
                 LOG.info("Getting membership by id: " + id);
                 return repo.findById(id);
+        }
+
+        public Optional<Membership> GetMembershipByUserPhoneNumber(String phoneNumber)
+        {
+                var user = userRepository.findByPhoneNumber(phoneNumber);
+                if (user.isEmpty()) return Optional.empty();
+
+                var mem = repo.findByUserId(user.get().getId());
+                if (mem.isEmpty()) return Optional.empty();
+                return mem;
         }
 
         public Membership CreateMembership(int userId, Membership membership)

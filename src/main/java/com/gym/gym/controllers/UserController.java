@@ -24,7 +24,7 @@ public class UserController
         private MembershipService membershipService;
 
         // GET
-        @GetMapping
+        @GetMapping("/id")
         public ResponseEntity<User> GetUserById(@RequestParam int userId)
         {
                 LOG.info("Getting user by id: " + userId);
@@ -35,7 +35,25 @@ public class UserController
                         return ResponseEntity.ok().body(user.get());
         }
 
+        @GetMapping("/phoneNumber")
+        public ResponseEntity<User> GetUserByPhoneNumber(@RequestParam String phoneNumber)
+        {
+                var user = service.GetUserByPhoneNumber(phoneNumber);
+                if (user.isEmpty())
+                        return ResponseEntity.notFound().build();
+                else
+                        return ResponseEntity.ok().body(user.get());
+        }
+
         // POST
+        @PostMapping("/create")
+        public ResponseEntity<User> CreateUser(@RequestBody User user)
+        {
+                LOG.info("Creating user");
+
+                service.CreateUser(user.getName(), user.getBirthday(), user.getPhoneNumber());
+                return ResponseEntity.ok().build();
+        }
 
         // PUT
 
