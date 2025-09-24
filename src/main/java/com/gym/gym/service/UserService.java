@@ -5,7 +5,9 @@ import com.gym.gym.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -27,6 +29,10 @@ public class UserService
                 return repo.findByPhoneNumber(phoneNumber);
         }
 
+        public List<User> GetAllUsers()
+        {
+                return repo.findAll();
+        }
 
         public void DeleteUserById(int userId)
         {
@@ -34,7 +40,7 @@ public class UserService
                 repo.deleteById(userId);
         }
 
-        public User CreateUser(String name, LocalDateTime birthday, String phoneNumber)
+        public User CreateUser(String name, LocalDate birthday, String phoneNumber)
         {
                 LOG.info("Creating user");
                 User user = new User();

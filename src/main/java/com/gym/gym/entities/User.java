@@ -2,6 +2,7 @@ package com.gym.gym.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,7 +17,7 @@ public class User
         private String name;
 
         @Column(name="birthday")
-        private LocalDateTime birthday;
+        private LocalDate birthday;
 
         @Column(name="phone_number")
         private String phoneNumber;
@@ -36,12 +37,12 @@ public class User
                 this.name = name;
         }
 
-        public LocalDateTime getBirthday()
+        public LocalDate getBirthday()
         {
                 return birthday;
         }
 
-        public void setBirthday(LocalDateTime birthday)
+        public void setBirthday(LocalDate birthday)
         {
                 this.birthday = birthday;
         }

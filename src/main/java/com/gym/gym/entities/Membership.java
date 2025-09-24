@@ -12,9 +12,12 @@ public class Membership
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
+        @Column(name="state")
+        private String state;
+
         @ManyToOne
         @JoinColumn(name="type")
-        private MembershipTypes type;
+        private MembershipType type;
 
         @Column(name="last_payed")
         private LocalDateTime lastPayed;
@@ -31,14 +34,24 @@ public class Membership
                 return id;
         }
 
-        public MembershipTypes getType()
+        public MembershipType getType()
         {
                 return type;
         }
 
-        public void setType(MembershipTypes type)
+        public void setType(MembershipType type)
         {
                 this.type = type;
+        }
+
+        public String getState()
+        {
+                return state;
+        }
+
+        public void setState(String state)
+        {
+                this.state = state;
         }
 
         public LocalDateTime getLastPayed()

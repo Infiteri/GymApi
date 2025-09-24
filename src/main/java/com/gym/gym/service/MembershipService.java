@@ -1,17 +1,15 @@
 package com.gym.gym.service;
 
 import com.gym.gym.entities.Membership;
+import com.gym.gym.entities.MembershipType;
 import com.gym.gym.entities.User;
 import com.gym.gym.repositories.MembershipRepository;
 import com.gym.gym.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.logging.Logger;
 
 @Service
@@ -80,6 +78,16 @@ public class MembershipService
                 return repo.save(membership);
         }
 
+        public Membership UpdateMembershipState(int id, String state) {
+
+                var mem = repo.findById(id);
+                if (mem.isEmpty()) return null;
+
+                Membership membership = mem.get();
+                membership.setState(state);
+                return repo.save(membership);
+        }
+
         public Membership UpdateMembershipLastPayedById(int id, LocalDateTime newLastPayed)
         {
                 LOG.info("Updating membership payment by id: " + id);
@@ -89,6 +97,5 @@ public class MembershipService
                 Membership membership = mem.get();
                 membership.setLastPayed(newLastPayed);
                 return repo.save(membership);
-
         }
 }

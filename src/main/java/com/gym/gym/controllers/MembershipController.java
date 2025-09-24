@@ -1,15 +1,16 @@
 package com.gym.gym.controllers;
 
 import com.gym.gym.entities.Membership;
+import com.gym.gym.entities.MembershipState;
+import com.gym.gym.entities.MembershipType;
 import com.gym.gym.service.MembershipService;
 import com.gym.gym.service.UserService;
-import org.apache.coyote.Response;
+import com.gym.gym.utils.TimeCheckerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Member;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
@@ -21,6 +22,8 @@ public class MembershipController
 
         @Autowired
         private MembershipService service;
+        @Autowired
+        private UserService userService;
 
         // GET
         @GetMapping("/id")
@@ -54,6 +57,66 @@ public class MembershipController
                 return ResponseEntity.ok().body(mem);
         }
 
+        @PostMapping("/enter")
+        public ResponseEntity<Membership> Enter(@RequestParam String phoneNumber)
+        {
+                var user = userService.GetUserByPhoneNumber(phoneNumber);
+
+                if (user.isEmpty()) return ResponseEntity.notFound().build();
+
+                var membership = service.GetMembershipByUserId(user.get().getId());
+
+                if (membership.isEmpty()) return ResponseEntity.notFound().build();
+
+                if (membership.get().getState().equals(MembershipState.GetInGym()))
+                {
+                        // todo: Add some json to describe the issue so can display in whatever front end its using
+                        LOG.severe("Membership is already in gym");
+                        // todo: Reanable
+                        return ResponseEntity.badRequest().build();
+                }
+
+
+                // todo: Check time to make the membership is payed
+                if (!TimeCheckerUtils.CheckIfMembershipIsPayed(membership.get()))
+                {
+                        LOG.severe("Membership is not payed");
+                        return ResponseEntity.badRequest().build();
+                }
+
+                // todo: Check time to make sure membership type allows it
+
+                if (!TimeCheckerUtils.CheckTimeOnMembershipType(membership.get().getType()))
+                {
+                        LOG.severe("Time doesn't allow");
+                        return ResponseEntity.badRequest().build();
+                }
+
+                var stateMembership = service.UpdateMembershipState(membership.get().getId(), MembershipState.GetState(true));
+
+                return ResponseEntity.ok().body(stateMembership);
+        }
+
+        @PostMapping("/exit")
+        public ResponseEntity<Membership> Exit(@RequestParam String phoneNumber) {
+                var user = userService.GetUserByPhoneNumber(phoneNumber);
+                if (user.isEmpty()) return ResponseEntity.notFound().build();
+                var membership = service.GetMembershipByUserId(user.get().getId());
+                if (membership.isEmpty()) return ResponseEntity.notFound().build();
+
+                if (membership.get().getState().equals(MembershipState.GetNotInGym()))
+                {
+                        LOG.severe("Membership isn't already in gym");
+                        return  ResponseEntity.badRequest().build();
+                }
+
+                var stateMembership = service.UpdateMembershipState(membership.get().getId(), MembershipState.GetState(false));
+
+                return ResponseEntity.ok().body(stateMembership);
+        }
+
+
+
         // PUT
         @PutMapping("/update/{id}")
         public ResponseEntity<Membership> UpdateMembershipById(@PathVariable int id, @RequestBody Membership membership)
@@ -70,7 +133,7 @@ public class MembershipController
         {
                 LOG.info("Updating membership payment by id: " + id);
 
-                if(membership.getLastPayed() == null) membership.setLastPayed(LocalDateTime.now());
+                if (membership.getLastPayed() == null) membership.setLastPayed(LocalDateTime.now());
 
                 var mem = service.UpdateMembershipLastPayedById(id, membership.getLastPayed());
                 if (mem == null) return ResponseEntity.notFound().build();
