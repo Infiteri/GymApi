@@ -4,6 +4,7 @@ import com.gym.gym.entities.User;
 import com.gym.gym.service.MembershipService;
 import com.gym.gym.service.UserService;
 import org.apache.coyote.Response;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,7 @@ public class UserController
         @GetMapping("/phoneNumber")
         public ResponseEntity<User> GetUserByPhoneNumber(@RequestParam String phoneNumber)
         {
+                LOG.info("Getting user by phone number: " + phoneNumber);
                 var user = service.GetUserByPhoneNumber(phoneNumber);
                 if (user.isEmpty())
                         return ResponseEntity.notFound().build();
@@ -66,7 +68,7 @@ public class UserController
         // PUT
 
         // DELETE
-        @DeleteMapping
+        @DeleteMapping("/id")
         public ResponseEntity<User> DeleteUserById(@RequestParam int userId)
         {
                 LOG.info("Deleting user by id: " + userId);
@@ -76,6 +78,18 @@ public class UserController
                         membershipService.DeleteMembershipById(membership.get().getId());
 
                 service.DeleteUserById(userId);
+                return ResponseEntity.ok().build();
+        }
+
+        @DeleteMapping("/phoneNumber")
+        public ResponseEntity<User> DeleteUserByPhoneNumber(@RequestParam String phoneNumber)
+        {
+                var user = service.GetUserByPhoneNumber(phoneNumber);
+                if(user.isEmpty()) {
+                        return ResponseEntity.notFound().build();
+                }
+
+                DeleteUserById(user.get().getId());
                 return ResponseEntity.ok().build();
         }
 }

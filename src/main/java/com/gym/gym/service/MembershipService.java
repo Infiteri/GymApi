@@ -50,6 +50,7 @@ public class MembershipService
                 mem.setLastPayed(LocalDateTime.now());
                 mem.setCreatedAt(LocalDateTime.now());
                 mem.setUser(user.get());
+                mem.setState(membership.getState());
                 return repo.save(mem);
         }
 

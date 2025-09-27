@@ -40,6 +40,11 @@ public class UserService
                 repo.deleteById(userId);
         }
 
+        public void DeleteUserByPhoneNumber(String phoneNumber)
+        {
+                repo.deleteByPhoneNumber(phoneNumber);
+        }
+
         public User CreateUser(String name, LocalDate birthday, String phoneNumber)
         {
                 LOG.info("Creating user");
