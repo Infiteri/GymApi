@@ -3,8 +3,6 @@ package com.gym.gym.controllers;
 import com.gym.gym.entities.User;
 import com.gym.gym.service.MembershipService;
 import com.gym.gym.service.UserService;
-import org.apache.coyote.Response;
-import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

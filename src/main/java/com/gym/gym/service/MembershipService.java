@@ -1,7 +1,6 @@
 package com.gym.gym.service;
 
 import com.gym.gym.entities.Membership;
-import com.gym.gym.entities.MembershipType;
 import com.gym.gym.entities.User;
 import com.gym.gym.repositories.MembershipRepository;
 import com.gym.gym.repositories.UserRepository;

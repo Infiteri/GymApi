@@ -1,7 +1,6 @@
 package com.gym.gym.controllers;
 
 
-import com.gym.gym.entities.Membership;
 import com.gym.gym.entities.MembershipType;
 import com.gym.gym.service.MembershipTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
